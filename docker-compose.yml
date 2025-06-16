@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    # command: python manage.py runserver 0.0.0.0:8000
+
+    # Připojí aktuální adresář (kde je docker-compose.yml) do /app v kontejneru
+    volumes:
+      - .:/app
+    # 'HOST:KONTEJNER'
+    ports:
+      - "8000:8000"

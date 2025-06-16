@@ -14,4 +14,4 @@ COPY . .
 EXPOSE 8000
 
 # Výchozí příkaz, který se spustí při startu kontejneru
-CMD ["python", "manage.py", "runserver", "127.0.0.1:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

@@ -8,3 +8,8 @@ docker-compose exec web python manage.py migrate
 
 ## Naplnění daty
 docker-compose exec web python manage.py seed_data
+
+### localhost:8000
+
+### superuser
+docker-compose exec web python manage.py createsuperuser -> pokyny

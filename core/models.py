@@ -32,7 +32,13 @@ class ObservationSrozumitelnostReci(models.Model):
     navsteva = models.OneToOneField(Navsteva, on_delete=models.CASCADE, related_name='srozumitelnost_reci')
     referencni_text = models.TextField()
     wer_procento = models.FloatField()
-    rychlost_reci = models.FloatField()
+
+    RYCHLOST_RECI_SNOMED = '1197010003'
+    RYCHLOST_RECI_DISPLAY = 'Rate of speech'
+    rychlost_reci = models.FloatField(
+        help_text=f'SNOMED CT: {RYCHLOST_RECI_SNOMED} ({RYCHLOST_RECI_DISPLAY})'
+    )
+    
     klinicka_interpretace = models.TextField(blank=True, null=True)
 
     def __str__(self):
@@ -40,8 +46,14 @@ class ObservationSrozumitelnostReci(models.Model):
 
 class ObservationReakcniDoba(models.Model):
     navsteva = models.OneToOneField(Navsteva, on_delete=models.CASCADE, related_name='reakcni_doba')
-    typ_podnetu = models.CharField(max_length=50) # např. 'Vizuální', 'Zvukový'
-    prumerna_doba_ms = models.IntegerField()
+    typ_podnetu = models.CharField(max_length=50)
+
+    PRUMERNA_DOBA_SNOMED = '112460003'
+    PRUMERNA_DOBA_DISPLAY = 'Reaction time'
+    prumerna_doba_ms = models.IntegerField(
+        help_text=f'SNOMED CT: {PRUMERNA_DOBA_SNOMED} ({PRUMERNA_DOBA_DISPLAY})'
+    )
+    
     smerodatna_odchylka_ms = models.FloatField()
 
     def __str__(self):
@@ -49,7 +61,7 @@ class ObservationReakcniDoba(models.Model):
 
 class ObservationKlepaniPrsty(models.Model):
     navsteva = models.OneToOneField(Navsteva, on_delete=models.CASCADE, related_name='klepani_prsty')
-    hodnocena_koncetina = models.CharField(max_length=50) # např. 'Pravá', 'Levá'
+    hodnocena_koncetina = models.CharField(max_length=50)
     pocet_poklepu = models.IntegerField()
     doba_trvani_s = models.IntegerField()
 
@@ -61,17 +73,38 @@ class ObservationBolestiHlavy(models.Model):
     obdobi_od = models.DateField()
     obdobi_do = models.DateField()
     pocet_dni_s_bolesti = models.IntegerField()
-    prumerna_intenzita = models.IntegerField() # např. na škále 1-10
+
+    PRUMERNA_INTENZITA_SNOMED = '25064002'
+    PRUMERNA_INTENZITA_DISPLAY = 'Pain intensity'
+    prumerna_intenzita = models.IntegerField(
+        help_text=f'SNOMED CT: {PRUMERNA_INTENZITA_SNOMED} ({PRUMERNA_INTENZITA_DISPLAY})'
+    )
 
     def __str__(self):
         return f"Deník bolestí hlavy pro návštěvu ID: {self.navsteva.id}"
 
 class ObservationKrevniTlak(models.Model):
     navsteva = models.OneToOneField(Navsteva, on_delete=models.CASCADE, related_name='krevni_tlak')
-    systolicky = models.IntegerField()
-    diastolicky = models.IntegerField()
-    srdecni_frekvence = models.IntegerField()
-    poloha_pacienta = models.CharField(max_length=50) # např. 'Vsedě', 'Vleže'
+
+    SYSTOLICKY_SNOMED = '271649006'
+    SYSTOLICKY_DISPLAY = 'Systolic blood pressure'
+    systolicky = models.IntegerField(
+        help_text=f'SNOMED CT: {SYSTOLICKY_SNOMED} ({SYSTOLICKY_DISPLAY})'
+    )
+
+    DIASTOLICKY_SNOMED = '271650006'
+    DIASTOLICKY_DISPLAY = 'Diastolic blood pressure'
+    diastolicky = models.IntegerField(
+        help_text=f'SNOMED CT: {DIASTOLICKY_SNOMED} ({DIASTOLICKY_DISPLAY})'
+    )
+
+    SRDECNI_FREKVENCE_SNOMED = '364075005'
+    SRDECNI_FREKVENCE_DISPLAY = 'Heart rate'
+    srdecni_frekvence = models.IntegerField(
+        help_text=f'SNOMED CT: {SRDECNI_FREKVENCE_SNOMED} ({SRDECNI_FREKVENCE_DISPLAY})'
+    )
+    
+    poloha_pacienta = models.CharField(max_length=50)
 
     def __str__(self):
         return f"Krevní tlak pro návštěvu ID: {self.navsteva.id}"

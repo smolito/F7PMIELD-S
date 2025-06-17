@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail pacienta: {{ pacient.jmeno }}</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 2em; max-width: 900px; margin: auto; color: #333; }
+        .back-link { margin-bottom: 2em; display: inline-block; color: #0066cc; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .visit-card { border: 1px solid #ddd; border-radius: 8px; padding: 1.5em; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .visit-card h3 { margin-top: 0; color: #1a1a1a; }
+        .observations { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5em; margin-top: 1em; }
+        .observation-block h4 { margin-top: 0; margin-bottom: 0.5em; color: #444; border-bottom: 1px solid #eee; padding-bottom: 0.3em;}
+        .observation-block ul { list-style-type: none; padding-left: 0; margin: 0; }
+        .observation-block li { margin-bottom: 0.5em; } /* Zvětšená mezera pro kód */
+        .snomed-code { display: block; font-size: 0.8em; color: #777; margin-left: 1em; } /* Styl pro SNOMED kód */
+        .graph-container { margin-top: 3em; border-top: 2px solid #0066cc; padding-top: 1em; }
+    </style>
+</head>
+<body>
+    <a href="{% url 'core:patient_list' %}" class="back-link">&larr; Zpět na seznam pacientů</a>
+    <h1>Pacient: {{ pacient.jmeno }}</h1>
+    <p>Datum narození: {{ pacient.datum_narozeni|date:"d. m. Y" }}</p>
+
+    <hr>
+    <h2>Historie návštěv a měření</h2>
+    <div>
+        {% for navsteva in navstevy %}
+            <div class="visit-card">
+                <h3>Návštěva dne: {{ navsteva.datum_navstevy|date:"d. m. Y H:i" }}</h3>
+                {% if navsteva.poznamka %}
+                    <p><strong>Poznámka:</strong> {{ navsteva.poznamka }}</p>
+                {% endif %}
+
+                <div class="observations">
+                    {% if navsteva.krevni_tlak %}
+                        <div class="observation-block">
+                            <h4>Krevní tlak</h4>
+                            <ul>
+                                <li><strong>Systolický:</strong> {{ navsteva.krevni_tlak.systolicky }} mmHg<span class="snomed-code">SNOMED CT: {{ navsteva.krevni_tlak.SYSTOLICKY_SNOMED }}</span></li>
+                                <li><strong>Diastolický:</strong> {{ navsteva.krevni_tlak.diastolicky }} mmHg<span class="snomed-code">SNOMED CT: {{ navsteva.krevni_tlak.DIASTOLICKY_SNOMED }}</span></li>
+                                <li><strong>Srdeční frekvence:</strong> {{ navsteva.krevni_tlak.srdecni_frekvence }} /min<span class="snomed-code">SNOMED CT: {{ navsteva.krevni_tlak.SRDECNI_FREKVENCE_SNOMED }}</span></li>
+                                <li><strong>Poloha:</strong> {{ navsteva.krevni_tlak.poloha_pacienta }}</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {% if navsteva.reakcni_doba %}
+                        <div class="observation-block">
+                            <h4>Reakční doba</h4>
+                            <ul>
+                                <li><strong>Typ podnětu:</strong> {{ navsteva.reakcni_doba.typ_podnetu }}</li>
+                                <li><strong>Průměrná doba:</strong> {{ navsteva.reakcni_doba.prumerna_doba_ms }} ms<span class="snomed-code">SNOMED CT: {{ navsteva.reakcni_doba.PRUMERNA_DOBA_SNOMED }}</span></li>
+                                <li><strong>Odchylka:</strong> {{ navsteva.reakcni_doba.smerodatna_odchylka_ms|floatformat:1 }} ms</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {% if navsteva.klepani_prsty %}
+                        <div class="observation-block">
+                            <h4>Klepání prsty</h4>
+                            <ul>
+                                <li><strong>Končetina:</strong> {{ navsteva.klepani_prsty.hodnocena_koncetina }}</li>
+                                <li><strong>Počet poklepů:</strong> {{ navsteva.klepani_prsty.pocet_poklepu }}</li>
+                                <li><strong>Doba trvání:</strong> {{ navsteva.klepani_prsty.doba_trvani_s }} s</li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                    {% if navsteva.srozumitelnost_reci %}
+                        <div class="observation-block">
+                            <h4>Srozumitelnost řeči</h4>
+                            <ul>
+                                <li><strong>WER:</strong> {{ navsteva.srozumitelnost_reci.wer_procento|floatformat:1 }} %</li>
+                                <li><strong>Rychlost řeči:</strong> {{ navsteva.srozumitelnost_reci.rychlost_reci|floatformat:1 }} slov/min<span class="snomed-code">SNOMED CT: {{ navsteva.srozumitelnost_reci.RYCHLOST_RECI_SNOMED }}</span></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    {% if navsteva.bolesti_hlavy %}
+                         <div class="observation-block">
+                            <h4>Deník bolestí hlavy</h4>
+                            <ul>
+                                <li><strong>Období:</strong> od {{ navsteva.bolesti_hlavy.obdobi_od|date:"d.m.Y" }} do {{ navsteva.bolesti_hlavy.obdobi_do|date:"d.m.Y" }}</li>
+                                <li><strong>Počet dní s bolestí:</strong> {{ navsteva.bolesti_hlavy.pocet_dni_s_bolesti }}</li>
+                                <li><strong>Průměrná intenzita:</strong> {{ navsteva.bolesti_hlavy.prumerna_intenzita }}/10<span class="snomed-code">SNOMED CT: {{ navsteva.bolesti_hlavy.PRUMERNA_INTENZITA_SNOMED }}</span></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p>Pro tohoto pacienta nebyly zaznamenány žádné návštěvy.</p>
+        {% endfor %}
+    </div>
+
+    {% for key, plot_div in plot_divs.items %}
+        <div class="graph-container">
+            {{ plot_div|safe }}
+        </div>
+    {% endfor %}
+
+    {% if not plot_divs %}
+        <p>Pro tohoto pacienta nejsou k dispozici žádná data k vizualizaci.</p>
+    {% endif %}
+</body>
+</html>

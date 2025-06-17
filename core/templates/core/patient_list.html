@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seznam pacientů</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 2em; }
+        ul { list-style-type: none; padding: 0; }
+        li { margin: 0.5em 0; }
+        a { text-decoration: none; color: #0066cc; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Seznam pacientů</h1>
+    <ul>
+        {% for pacient in pacienti %}
+            <li>
+                <a href="{% url 'core:patient_detail' pacient.id %}">
+                    {{ pacient.jmeno }}
+                </a>
+            </li>
+        {% empty %}
+            <li>V databázi nejsou žádní pacienti.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export dat pro: {{ pacient.jmeno }}</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 2em; max-width: 900px; margin: auto; color: #333; }
+        .back-link { margin-bottom: 2em; display: inline-block; color: #0066cc; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .form-group { margin-bottom: 1.5em; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 0.5em; }
+        .visit-list { list-style-type: none; padding: 0; }
+        .visit-list li { margin-bottom: 0.5em; }
+        .submit-btn { background-color: #28a745; color: white; padding: 0.7em 1.5em; border: none; border-radius: 5px; font-size: 1em; cursor: pointer; }
+        .submit-btn:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+    <a href="{% url 'core:patient_detail' pacient.id %}" class="back-link">&larr; Zpět na detail pacienta</a>
+    <h1>Export dat pro pacienta: {{ pacient.jmeno }}</h1>
+    
+    <form action="{% url 'core:export_selection' pacient.id %}" method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label>1. Vyberte návštěvy k exportu:</label>
+            <ul class="visit-list">
+                {% for navsteva in navstevy %}
+                    <li>
+                        <input type="checkbox" name="visit_ids" value="{{ navsteva.id }}" id="visit_{{ navsteva.id }}">
+                        <label for="visit_{{ navsteva.id }}">Návštěva dne {{ navsteva.datum_navstevy|date:"d. m. Y H:i" }}</label>
+                    </li>
+                {% empty %}
+                    <li>Tento pacient nemá žádné návštěvy.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="form-group">
+            <label for="format">2. Zvolte formát exportu:</label>
+            <select name="format" id="format">
+                <option value="json">JSON</option>
+                <option value="txt">Čitelný text (.txt)</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="submit-btn">Stáhnout export</button>
+    </form>
+</body>
+</html>

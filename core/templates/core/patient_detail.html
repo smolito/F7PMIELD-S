@@ -6,24 +6,34 @@
     <title>Detail pacienta: {{ pacient.jmeno }}</title>
     <style>
         body { font-family: sans-serif; line-height: 1.6; padding: 2em; max-width: 900px; margin: auto; color: #333; }
-        .back-link { margin-bottom: 2em; display: inline-block; color: #0066cc; text-decoration: none; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #0066cc; padding-bottom: 1em; margin-bottom: 2em; }
+        .header-info h1 { margin: 0; }
+        .header-info p { margin: 0; color: #555; }
+        .back-link { margin-bottom: 1em; display: inline-block; color: #0066cc; text-decoration: none; }
         .back-link:hover { text-decoration: underline; }
+        .export-btn { background-color: #0066cc; color: white; padding: 0.5em 1em; text-decoration: none; border-radius: 5px; font-size: 0.9em; }
+        .export-btn:hover { background-color: #0052a3; }
         .visit-card { border: 1px solid #ddd; border-radius: 8px; padding: 1.5em; margin-bottom: 1.5em; background-color: #f9f9f9; }
         .visit-card h3 { margin-top: 0; color: #1a1a1a; }
         .observations { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5em; margin-top: 1em; }
         .observation-block h4 { margin-top: 0; margin-bottom: 0.5em; color: #444; border-bottom: 1px solid #eee; padding-bottom: 0.3em;}
         .observation-block ul { list-style-type: none; padding-left: 0; margin: 0; }
-        .observation-block li { margin-bottom: 0.5em; } /* Zvětšená mezera pro kód */
-        .snomed-code { display: block; font-size: 0.8em; color: #777; margin-left: 1em; } /* Styl pro SNOMED kód */
+        .observation-block li { margin-bottom: 0.5em; }
+        .snomed-code { display: block; font-size: 0.8em; color: #777; margin-left: 1em; }
         .graph-container { margin-top: 3em; border-top: 2px solid #0066cc; padding-top: 1em; }
     </style>
 </head>
 <body>
     <a href="{% url 'core:patient_list' %}" class="back-link">&larr; Zpět na seznam pacientů</a>
-    <h1>Pacient: {{ pacient.jmeno }}</h1>
-    <p>Datum narození: {{ pacient.datum_narozeni|date:"d. m. Y" }}</p>
+    
+    <div class="header">
+        <div class="header-info">
+            <h1>{{ pacient.jmeno }}</h1>
+            <p>Datum narození: {{ pacient.datum_narozeni|date:"d. m. Y" }}</p>
+        </div>
+        <a href="{% url 'core:export_selection' pacient.id %}" class="export-btn">Exportovat data</a>
+    </div>
 
-    <hr>
     <h2>Historie návštěv a měření</h2>
     <div>
         {% for navsteva in navstevy %}

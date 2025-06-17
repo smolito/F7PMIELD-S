@@ -43,10 +43,10 @@ class Command(BaseCommand):
                 navsteva = Navsteva.objects.create(
                     pacient=pacient,
                     datum_navstevy=timezone.now() - timedelta(days=i * 60 + random.randint(0, 30)),
-                    poznamka=fake.sentence(nb_words=10) if random.choice([True, False]) else ""
+                    poznamka=fake.sentence(nb_words=random.randint(15, 30)) if random.choice([True, False]) else ""
                 )
 
-                # Náhodně vytvoříme pozorování pro každou návštěvu
+                # Náhodné pozorování pro každou návštěvu
                 if random.choice([True, True, False]):
                     ObservationKrevniTlak.objects.create(
                         navsteva=navsteva,
@@ -64,7 +64,7 @@ class Command(BaseCommand):
                         smerodatna_odchylka_ms=random.uniform(20.0, 50.0)
                     )
 
-                if random.choice([True, False]):
+                if random.choice([True, True, False]):
                     ObservationKlepaniPrsty.objects.create(
                         navsteva=navsteva,
                         hodnocena_koncetina=random.choice(['Pravá', 'Levá']),
@@ -72,7 +72,7 @@ class Command(BaseCommand):
                         doba_trvani_s=10
                     )
 
-                if random.choice([True, False, False]): # Menší šance na vytvoření
+                if random.choice([False, False]):
                     obdobi_do = navsteva.datum_navstevy.date()
                     obdobi_od = obdobi_do - timedelta(days=30)
                     ObservationBolestiHlavy.objects.create(
@@ -83,7 +83,7 @@ class Command(BaseCommand):
                         prumerna_intenzita=random.randint(1, 10)
                     )
 
-                if random.choice([True, False, False]):
+                if random.choice([True, True, False]):
                     ObservationSrozumitelnostReci.objects.create(
                         navsteva=navsteva,
                         referencni_text="Příliš žluťoučký kůň úpěl ďábelské ódy.",

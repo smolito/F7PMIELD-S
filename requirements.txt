@@ -2,3 +2,4 @@ django
 faker
 plotly
 pandas
+fhir.resources

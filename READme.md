@@ -1,15 +1,15 @@
 # build
-docker-compose up --build
+    docker-compose up --build
 
-# nový terminál
+# v novém terminálu
 
 ## Vytvoření tabulek
-docker-compose exec web python manage.py migrate
+    docker-compose exec web python manage.py migrate
 
-## Naplnění daty
-docker-compose exec web python manage.py seed_data
+## Naplnění dummy daty
+    docker-compose exec web python manage.py seed_data
 
-### localhost:8000
+### app dostupná na localhost:8000
 
-### superuser
-docker-compose exec web python manage.py createsuperuser -> pokyny
+### superuser pro POST, UPDATE, DEL: localhost:8000/admin
+    docker-compose exec web python manage.py createsuperuser -> pokyny

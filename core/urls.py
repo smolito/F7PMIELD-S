@@ -5,9 +5,7 @@ from . import views
 app_name = 'core'
 
 urlpatterns = [
-    # Cesta pro seznam všech pacientů, např. http://localhost:8000/
-    path('', views.patient_list, name='patient_list'),
-    
-    # Cesta pro detail konkrétního pacienta, např. http://localhost:8000/pacient/1/
-    path('pacient/<int:patient_id>/', views.patient_detail, name='patient_detail'),
+    path('', views.patient_list, name='patient_list'), # vše
+    path('pacient/<int:patient_id>/', views.patient_detail, name='patient_detail'), # jeden pac
+    path('pacient/<int:patient_id>/export/', views.export_selection, name='export_selection'), # export z jednoho pacienta
 ]
